@@ -1,0 +1,465 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { Lock, Search, FileText, Image as ImageIcon, Wrench, Megaphone, Boxes, ExternalLink, LogOut, ShieldCheck, Package, LifeBuoy, Palette, BookOpen } from "lucide-react";
+
+const ACCESS_CODE = "SWFDEALER";
+const SWF_LOGO = "https://cdn.shopify.com/s/files/1/1236/6284/files/swfnobg.png?v=1759258611";
+const KNOWLEDGEBASE_URL = "https://stitch-it-support-site.web.app/";
+const SUPPORT_TICKET_URL = "https://stitch-it-support-site.web.app/supportForm";
+
+const machineCards = [
+  {
+    name: "KX Series (Tubular)",
+    category: "Multi-Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX_6_head.png?v=1771959407",
+    speed: "1,200 SPM",
+    field: "UH: 400 x 450 mm | UK: 500 x 450 mm",
+    memory: "40,000,000 stitches",
+    highlights: ["15.1 inch LCD control", "Smart tension system", "EZ-Change cap system", "Built for high-volume production"],
+  },
+  {
+    name: "KE Series",
+    category: "Multi-Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/ke-8-head.jpg?v=1771961190",
+    speed: "1,000 SPM",
+    field: "450 x 360 mm",
+    memory: "2,000,000 stitches",
+    highlights: ["Economy multi-head platform", "15.1 inch touch LCD", "Commercial production workflow", "Cap, flat, and tubular capable"],
+  },
+  {
+    name: "KX-T1502D",
+    category: "Dual Function",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX-1X1-e1739525153532-1024x916.png?v=1772740296",
+    speed: "1,200 SPM",
+    field: "520 x 360 mm",
+    memory: "40,000,000 stitches",
+    highlights: ["Runs as one unit or two independent heads", "15.1 inch full-touch LCD", "Smart Action Presser Foot", "EZ-Change cap system"],
+  },
+  {
+    name: "KX-T1501",
+    category: "Single Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX_single.jpg?v=1759260196",
+    speed: "1,200 SPM",
+    field: "520 x 360 mm border",
+    memory: "40,000,000 stitches",
+    highlights: ["High performance 15-needle platform", "15.1 inch touch LCD", "Smart Tension option", "Cap focused setup"],
+  },
+  {
+    name: "ES-T1501",
+    category: "Single Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/es_full_size.jpg?v=1759260197",
+    speed: "1,000 SPM",
+    field: "520 x 360 mm tubular / border",
+    memory: "2,000,000 stitches",
+    highlights: ["Full-size commercial single head", "15-needle platform", "Cap setup included", "Great for growing decorators"],
+  },
+  {
+    name: "MAS-15",
+    category: "Compact Single Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/es_compact_ce76207c-a665-4f6f-8335-a67fc84e26c4.jpg?v=1759260197",
+    speed: "1,000 SPM",
+    field: "360 x 360 mm",
+    memory: "2,000,000 stitches",
+    highlights: ["Compact 15-needle platform", "Cap ready", "Smaller footprint", "Reliable daily output"],
+  },
+  {
+    name: "MAS-12",
+    category: "Compact Single Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/MAS-12.jpg?v=1759260197",
+    speed: "1,000 SPM",
+    field: "360 x 360 mm",
+    memory: "2,000,000 stitches",
+    highlights: ["Compact 12-needle platform", "Cap ready", "Great for small spaces", "Easy daily production"],
+  },
+  {
+    name: "MAS-7",
+    category: "Compact Single Head",
+    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/Sunny_6.jpg?v=1759260197",
+    speed: "1,000 SPM",
+    field: "300 x 200 mm",
+    memory: "2,000,000 stitches",
+    highlights: ["7-needle compact platform", "Portable setup", "Built-in designs and fonts", "Flat hoop workflow"],
+  },
+];
+
+const resources = [
+  {
+    category: "Support Links",
+    icon: LifeBuoy,
+    description: "Quick access to SWF support and service resources.",
+    items: [
+      { title: "Knowledgebase", type: "Link", note: "Service documentation and support reference", href: KNOWLEDGEBASE_URL },
+      { title: "Start a Support Ticket", type: "Link", note: "Open dealer support request", href: SUPPORT_TICKET_URL },
+    ],
+  },
+  {
+    category: "Machine Brochures",
+    icon: FileText,
+    description: "Space reserved for current brochure downloads and one-page PDF sell sheets.",
+    items: [
+      { title: "KX Series Brochure", type: "PDF", note: "Add final brochure link", href: "#" },
+      { title: "KE Series Brochure", type: "PDF", note: "Add final brochure link", href: "#" },
+      { title: "Single Head Brochures", type: "PDF", note: "KX, ES, and MAS family brochures", href: "#" },
+      { title: "Warranty and Protection Docs", type: "PDF", note: "Dealer reference materials", href: "#" },
+    ],
+  },
+  {
+    category: "Marketing Collateral",
+    icon: Megaphone,
+    description: "Reserved for co-branded flyers, social graphics, and dealer-facing sales material.",
+    items: [
+      { title: "Co-Branded Flyers", type: "Folder", note: "Add shared folder link", href: "#" },
+      { title: "Social Media Graphics", type: "Folder", note: "Dealer-ready post graphics", href: "#" },
+      { title: "Email Templates", type: "DOC", note: "Sales email examples and messaging", href: "#" },
+      { title: "Finance Promo Assets", type: "Folder", note: "BYLD collateral and promos", href: "#" },
+    ],
+  },
+  {
+    category: "Inventory",
+    icon: Boxes,
+    description: "Reserved for live current inventory, incoming units, and dealer availability tracking.",
+    items: [
+      { title: "Current Inventory", type: "Sheet", note: "Add live inventory source", href: "#" },
+      { title: "Incoming Units", type: "Sheet", note: "Expected arrivals and ETAs", href: "#" },
+      { title: "Demo Machines", type: "Sheet", note: "Demo opportunities and status", href: "#" },
+    ],
+  },
+];
+
+const quickLinks = [
+  { label: "Knowledgebase", href: KNOWLEDGEBASE_URL, icon: BookOpen },
+  { label: "Support Ticket", href: SUPPORT_TICKET_URL, icon: Wrench },
+  { label: "Current Inventory", href: "#", icon: Package },
+  { label: "Brand Assets", href: "#", icon: Palette },
+];
+
+function StatCard({ value, label }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
+      <div className="text-2xl font-semibold text-white">{value}</div>
+      <div className="mt-1 text-sm text-white/65">{label}</div>
+    </div>
+  );
+}
+
+function SectionCard({ section, search }) {
+  const Icon = section.icon;
+  const filteredItems = section.items.filter((item) => {
+    const haystack = `${section.category} ${section.description} ${item.title} ${item.note} ${item.type}`.toLowerCase();
+    return haystack.includes(search.toLowerCase());
+  });
+
+  if (!filteredItems.length) return null;
+
+  return (
+    <section className="rounded-[28px] border border-neutral-200 bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,.06)]">
+      <div className="flex items-start gap-4">
+        <div className="rounded-2xl bg-red-50 p-3 text-red-600">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-neutral-950">{section.category}</h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-600">{section.description}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+        {filteredItems.map((item) => (
+          <a
+            key={item.title}
+            href={item.href}
+            target={item.href !== "#" ? "_blank" : undefined}
+            rel={item.href !== "#" ? "noopener noreferrer" : undefined}
+            className="group rounded-3xl border border-neutral-200 bg-neutral-50 p-4 transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-white hover:shadow-lg"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-base font-semibold text-neutral-950 group-hover:text-red-700">{item.title}</div>
+                <div className="mt-1 text-sm text-neutral-600">{item.note}</div>
+              </div>
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-neutral-700 ring-1 ring-neutral-200">
+                {item.type}
+              </span>
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-sm font-medium text-red-600">
+              Open Resource <ExternalLink className="h-4 w-4" />
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MachineCard({ machine }) {
+  return (
+    <article className="overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-[0_18px_50px_rgba(0,0,0,.06)]">
+      <div className="aspect-[4/3] bg-white p-6">
+        <img src={machine.image} alt={machine.name} className="h-full w-full object-contain" />
+      </div>
+      <div className="border-t border-neutral-200 p-6">
+        <div className="inline-flex rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-neutral-700">
+          {machine.category}
+        </div>
+        <h3 className="mt-3 text-2xl font-semibold tracking-tight text-neutral-950">{machine.name}</h3>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl bg-neutral-50 p-3">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Speed</div>
+            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.speed}</div>
+          </div>
+          <div className="rounded-2xl bg-neutral-50 p-3">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Field</div>
+            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.field}</div>
+          </div>
+          <div className="rounded-2xl bg-neutral-50 p-3">
+            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Memory</div>
+            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.memory}</div>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {machine.highlights.map((item) => (
+            <div key={item} className="rounded-2xl border border-neutral-200 bg-white p-3 text-sm text-neutral-700">
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default function SWFDealerPortal() {
+  const [mounted, setMounted] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = window.localStorage.getItem("swfDealerPortalAuthed");
+    if (saved === "true") setIsAuthed(true);
+  }, []);
+
+  const filteredSections = useMemo(() => {
+    return resources.filter((section) => {
+      const haystack = `${section.category} ${section.description} ${section.items
+        .map((item) => `${item.title} ${item.note} ${item.type}`)
+        .join(" ")}`.toLowerCase();
+      return haystack.includes(search.toLowerCase());
+    });
+  }, [search]);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (code.trim().toUpperCase() === ACCESS_CODE) {
+      window.localStorage.setItem("swfDealerPortalAuthed", "true");
+      setIsAuthed(true);
+      setError("");
+      return;
+    }
+    setError("Access code is incorrect.");
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("swfDealerPortalAuthed");
+    setIsAuthed(false);
+    setCode("");
+  };
+
+  if (!mounted) return null;
+
+  if (!isAuthed) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white">
+        <div className="relative isolate min-h-screen overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,27,35,.28),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,.08),transparent_25%)]" />
+
+          <div className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-6 py-12 lg:grid-cols-[1.15fr_.85fr] lg:px-10">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-sm">
+                <ShieldCheck className="h-4 w-4" /> Dealer Access Portal
+              </div>
+              <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-tight tracking-tight md:text-6xl">
+                SWF USA Dealer Portal
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-7 text-white/70 md:text-lg">
+                A standalone resource hub for approved dealers with brochures, machine imagery, support links, marketing collateral, and current inventory resources in one place.
+              </p>
+
+              <div className="mt-8 grid max-w-xl gap-4 sm:grid-cols-3">
+                <StatCard value="1" label="Portal home" />
+                <StatCard value="6" label="Resource groups" />
+                <StatCard value="24/7" label="Dealer access" />
+              </div>
+            </div>
+
+            <div className="rounded-[32px] border border-white/10 bg-white/8 p-6 shadow-[0_20px_80px_rgba(0,0,0,.35)] backdrop-blur-xl md:p-8">
+              <div className="inline-flex rounded-full bg-red-600/15 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-red-200">
+                Sign In
+              </div>
+              <h2 className="mt-4 text-3xl font-semibold">Dealer Login</h2>
+              <p className="mt-2 text-sm leading-6 text-white/65">
+                For launch, this uses a simple shared access code so the portal can stay fully standalone and easy to host.
+              </p>
+
+              <form onSubmit={handleLogin} className="mt-8 space-y-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/85">Access code</label>
+                  <div className="relative">
+                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+                    <input
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="Enter dealer access code"
+                      className="w-full rounded-2xl border border-white/10 bg-black/20 px-11 py-3.5 text-white placeholder:text-white/35 outline-none transition focus:border-red-400"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full rounded-2xl bg-red-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-red-950/30 transition hover:-translate-y-0.5 hover:bg-red-700"
+                >
+                  Enter Portal
+                </button>
+
+                {error ? <div className="text-sm text-red-300">{error}</div> : null}
+              </form>
+
+              <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-5 text-sm text-white/65">
+                <div className="font-medium text-white">Recommended next step after launch</div>
+                <p className="mt-2 leading-6">
+                  Swap this shared-code gate for real authentication later if you want dealer-specific accounts, password resets, or tighter file protection.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#f5f6f8] text-neutral-950">
+      <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/92 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+          <div>
+            <div className="flex items-center gap-3">
+              <img src={SWF_LOGO} alt="SWF USA" className="h-9 w-auto" />
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">SWF USA</div>
+            </div>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight">Dealer Resource Portal</h1>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative min-w-[280px]">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search resources"
+                className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-11 py-3 text-sm outline-none transition focus:border-red-300 focus:bg-white"
+              />
+            </div>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:border-red-200 hover:text-red-700"
+            >
+              <LogOut className="h-4 w-4" /> Log Out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl px-6 py-8 lg:px-10 lg:py-10">
+        <section className="overflow-hidden rounded-[32px] bg-neutral-950 text-white shadow-[0_24px_80px_rgba(0,0,0,.22)]">
+          <div className="grid gap-8 px-6 py-8 md:px-8 md:py-10 lg:grid-cols-[1.15fr_.85fr] lg:px-10">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
+                <ShieldCheck className="h-4 w-4" /> Approved Dealer Access
+              </div>
+              <h2 className="mt-5 text-4xl font-semibold tracking-tight">Everything your dealers need, in one place.</h2>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">
+                This portal is designed to be a simple standalone hub for sales tools, support resources, marketing assets, machine media, and live inventory references.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {quickLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="rounded-3xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-0.5 hover:bg-white/10"
+                  >
+                    <div className="flex items-center gap-3 text-white">
+                      <div className="rounded-2xl bg-white/10 p-3">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="font-semibold">{link.label}</div>
+                        <div className="text-sm text-white/55">Quick access</div>
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
+            <div className="text-3xl font-semibold">6</div>
+            <div className="mt-1 text-sm text-neutral-600">Core resource sections</div>
+          </div>
+          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
+            <div className="text-3xl font-semibold">1</div>
+            <div className="mt-1 text-sm text-neutral-600">Single-page resource hub</div>
+          </div>
+          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
+            <div className="text-3xl font-semibold">Standalone</div>
+            <div className="mt-1 text-sm text-neutral-600">Built to host on GitHub and map to portal.swf-usa.com</div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-[32px] border border-neutral-200 bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,.06)] lg:p-8">
+          <div className="flex items-start gap-4">
+            <div className="rounded-2xl bg-red-50 p-3 text-red-600">
+              <ImageIcon className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-neutral-950">SWF Machine Library</h2>
+              <p className="mt-1 max-w-3xl text-sm leading-6 text-neutral-600">
+                Pulled from the current SWF machine HTML pages so dealers have a clean visual reference for the main lineup right inside the portal.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-6 xl:grid-cols-2">
+            {machineCards
+              .filter((machine) => {
+                const haystack = `${machine.name} ${machine.category} ${machine.speed} ${machine.field} ${machine.memory} ${machine.highlights.join(" ")}`.toLowerCase();
+                return haystack.includes(search.toLowerCase());
+              })
+              .map((machine) => (
+                <MachineCard key={machine.name} machine={machine} />
+              ))}
+          </div>
+        </section>
+
+        <section className="mt-8 space-y-6">
+          {filteredSections.length ? (
+            filteredSections.map((section) => <SectionCard key={section.category} section={section} search={search} />)
+          ) : (
+            <div className="rounded-[28px] border border-dashed border-neutral-300 bg-white p-10 text-center shadow-[0_14px_35px_rgba(0,0,0,.04)]">
+              <div className="text-lg font-semibold">No resources found</div>
+              <p className="mt-2 text-sm text-neutral-600">Try a broader search term like brochure, inventory, support, or images.</p>
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+}
