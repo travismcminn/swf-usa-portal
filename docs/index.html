@@ -1,465 +1,406 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Lock, Search, FileText, Image as ImageIcon, Wrench, Megaphone, Boxes, ExternalLink, LogOut, ShieldCheck, Package, LifeBuoy, Palette, BookOpen } from "lucide-react";
-
-const ACCESS_CODE = "SWFDEALER";
-const SWF_LOGO = "https://cdn.shopify.com/s/files/1/1236/6284/files/swfnobg.png?v=1759258611";
-const KNOWLEDGEBASE_URL = "https://stitch-it-support-site.web.app/";
-const SUPPORT_TICKET_URL = "https://stitch-it-support-site.web.app/supportForm";
-
-const machineCards = [
-  {
-    name: "KX Series (Tubular)",
-    category: "Multi-Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX_6_head.png?v=1771959407",
-    speed: "1,200 SPM",
-    field: "UH: 400 x 450 mm | UK: 500 x 450 mm",
-    memory: "40,000,000 stitches",
-    highlights: ["15.1 inch LCD control", "Smart tension system", "EZ-Change cap system", "Built for high-volume production"],
-  },
-  {
-    name: "KE Series",
-    category: "Multi-Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/ke-8-head.jpg?v=1771961190",
-    speed: "1,000 SPM",
-    field: "450 x 360 mm",
-    memory: "2,000,000 stitches",
-    highlights: ["Economy multi-head platform", "15.1 inch touch LCD", "Commercial production workflow", "Cap, flat, and tubular capable"],
-  },
-  {
-    name: "KX-T1502D",
-    category: "Dual Function",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX-1X1-e1739525153532-1024x916.png?v=1772740296",
-    speed: "1,200 SPM",
-    field: "520 x 360 mm",
-    memory: "40,000,000 stitches",
-    highlights: ["Runs as one unit or two independent heads", "15.1 inch full-touch LCD", "Smart Action Presser Foot", "EZ-Change cap system"],
-  },
-  {
-    name: "KX-T1501",
-    category: "Single Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/KX_single.jpg?v=1759260196",
-    speed: "1,200 SPM",
-    field: "520 x 360 mm border",
-    memory: "40,000,000 stitches",
-    highlights: ["High performance 15-needle platform", "15.1 inch touch LCD", "Smart Tension option", "Cap focused setup"],
-  },
-  {
-    name: "ES-T1501",
-    category: "Single Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/es_full_size.jpg?v=1759260197",
-    speed: "1,000 SPM",
-    field: "520 x 360 mm tubular / border",
-    memory: "2,000,000 stitches",
-    highlights: ["Full-size commercial single head", "15-needle platform", "Cap setup included", "Great for growing decorators"],
-  },
-  {
-    name: "MAS-15",
-    category: "Compact Single Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/es_compact_ce76207c-a665-4f6f-8335-a67fc84e26c4.jpg?v=1759260197",
-    speed: "1,000 SPM",
-    field: "360 x 360 mm",
-    memory: "2,000,000 stitches",
-    highlights: ["Compact 15-needle platform", "Cap ready", "Smaller footprint", "Reliable daily output"],
-  },
-  {
-    name: "MAS-12",
-    category: "Compact Single Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/MAS-12.jpg?v=1759260197",
-    speed: "1,000 SPM",
-    field: "360 x 360 mm",
-    memory: "2,000,000 stitches",
-    highlights: ["Compact 12-needle platform", "Cap ready", "Great for small spaces", "Easy daily production"],
-  },
-  {
-    name: "MAS-7",
-    category: "Compact Single Head",
-    image: "https://cdn.shopify.com/s/files/1/1236/6284/files/Sunny_6.jpg?v=1759260197",
-    speed: "1,000 SPM",
-    field: "300 x 200 mm",
-    memory: "2,000,000 stitches",
-    highlights: ["7-needle compact platform", "Portable setup", "Built-in designs and fonts", "Flat hoop workflow"],
-  },
-];
-
-const resources = [
-  {
-    category: "Support Links",
-    icon: LifeBuoy,
-    description: "Quick access to SWF support and service resources.",
-    items: [
-      { title: "Knowledgebase", type: "Link", note: "Service documentation and support reference", href: KNOWLEDGEBASE_URL },
-      { title: "Start a Support Ticket", type: "Link", note: "Open dealer support request", href: SUPPORT_TICKET_URL },
-    ],
-  },
-  {
-    category: "Machine Brochures",
-    icon: FileText,
-    description: "Space reserved for current brochure downloads and one-page PDF sell sheets.",
-    items: [
-      { title: "KX Series Brochure", type: "PDF", note: "Add final brochure link", href: "#" },
-      { title: "KE Series Brochure", type: "PDF", note: "Add final brochure link", href: "#" },
-      { title: "Single Head Brochures", type: "PDF", note: "KX, ES, and MAS family brochures", href: "#" },
-      { title: "Warranty and Protection Docs", type: "PDF", note: "Dealer reference materials", href: "#" },
-    ],
-  },
-  {
-    category: "Marketing Collateral",
-    icon: Megaphone,
-    description: "Reserved for co-branded flyers, social graphics, and dealer-facing sales material.",
-    items: [
-      { title: "Co-Branded Flyers", type: "Folder", note: "Add shared folder link", href: "#" },
-      { title: "Social Media Graphics", type: "Folder", note: "Dealer-ready post graphics", href: "#" },
-      { title: "Email Templates", type: "DOC", note: "Sales email examples and messaging", href: "#" },
-      { title: "Finance Promo Assets", type: "Folder", note: "BYLD collateral and promos", href: "#" },
-    ],
-  },
-  {
-    category: "Inventory",
-    icon: Boxes,
-    description: "Reserved for live current inventory, incoming units, and dealer availability tracking.",
-    items: [
-      { title: "Current Inventory", type: "Sheet", note: "Add live inventory source", href: "#" },
-      { title: "Incoming Units", type: "Sheet", note: "Expected arrivals and ETAs", href: "#" },
-      { title: "Demo Machines", type: "Sheet", note: "Demo opportunities and status", href: "#" },
-    ],
-  },
-];
-
-const quickLinks = [
-  { label: "Knowledgebase", href: KNOWLEDGEBASE_URL, icon: BookOpen },
-  { label: "Support Ticket", href: SUPPORT_TICKET_URL, icon: Wrench },
-  { label: "Current Inventory", href: "#", icon: Package },
-  { label: "Brand Assets", href: "#", icon: Palette },
-];
-
-function StatCard({ value, label }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm">
-      <div className="text-2xl font-semibold text-white">{value}</div>
-      <div className="mt-1 text-sm text-white/65">{label}</div>
-    </div>
-  );
-}
-
-function SectionCard({ section, search }) {
-  const Icon = section.icon;
-  const filteredItems = section.items.filter((item) => {
-    const haystack = `${section.category} ${section.description} ${item.title} ${item.note} ${item.type}`.toLowerCase();
-    return haystack.includes(search.toLowerCase());
-  });
-
-  if (!filteredItems.length) return null;
-
-  return (
-    <section className="rounded-[28px] border border-neutral-200 bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,.06)]">
-      <div className="flex items-start gap-4">
-        <div className="rounded-2xl bg-red-50 p-3 text-red-600">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-neutral-950">{section.category}</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-600">{section.description}</p>
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-2">
-        {filteredItems.map((item) => (
-          <a
-            key={item.title}
-            href={item.href}
-            target={item.href !== "#" ? "_blank" : undefined}
-            rel={item.href !== "#" ? "noopener noreferrer" : undefined}
-            className="group rounded-3xl border border-neutral-200 bg-neutral-50 p-4 transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-white hover:shadow-lg"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-base font-semibold text-neutral-950 group-hover:text-red-700">{item.title}</div>
-                <div className="mt-1 text-sm text-neutral-600">{item.note}</div>
-              </div>
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-neutral-700 ring-1 ring-neutral-200">
-                {item.type}
-              </span>
-            </div>
-            <div className="mt-4 flex items-center gap-2 text-sm font-medium text-red-600">
-              Open Resource <ExternalLink className="h-4 w-4" />
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function MachineCard({ machine }) {
-  return (
-    <article className="overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-[0_18px_50px_rgba(0,0,0,.06)]">
-      <div className="aspect-[4/3] bg-white p-6">
-        <img src={machine.image} alt={machine.name} className="h-full w-full object-contain" />
-      </div>
-      <div className="border-t border-neutral-200 p-6">
-        <div className="inline-flex rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-neutral-700">
-          {machine.category}
-        </div>
-        <h3 className="mt-3 text-2xl font-semibold tracking-tight text-neutral-950">{machine.name}</h3>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl bg-neutral-50 p-3">
-            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Speed</div>
-            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.speed}</div>
-          </div>
-          <div className="rounded-2xl bg-neutral-50 p-3">
-            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Field</div>
-            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.field}</div>
-          </div>
-          <div className="rounded-2xl bg-neutral-50 p-3">
-            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">Memory</div>
-            <div className="mt-1 text-sm font-medium text-neutral-900">{machine.memory}</div>
-          </div>
-        </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          {machine.highlights.map((item) => (
-            <div key={item} className="rounded-2xl border border-neutral-200 bg-white p-3 text-sm text-neutral-700">
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-export default function SWFDealerPortal() {
-  const [mounted, setMounted] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [code, setCode] = useState("");
-  const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    setMounted(true);
-    const saved = window.localStorage.getItem("swfDealerPortalAuthed");
-    if (saved === "true") setIsAuthed(true);
-  }, []);
-
-  const filteredSections = useMemo(() => {
-    return resources.filter((section) => {
-      const haystack = `${section.category} ${section.description} ${section.items
-        .map((item) => `${item.title} ${item.note} ${item.type}`)
-        .join(" ")}`.toLowerCase();
-      return haystack.includes(search.toLowerCase());
-    });
-  }, [search]);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (code.trim().toUpperCase() === ACCESS_CODE) {
-      window.localStorage.setItem("swfDealerPortalAuthed", "true");
-      setIsAuthed(true);
-      setError("");
-      return;
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWF USA Dealer Portal</title>
+  <style>
+    :root{
+      --bg:#f5f6f8;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --red:#d71920;
+      --red-dark:#b8141a;
+      --dark:#0b0f14;
+      --dark-2:#111827;
+      --soft:#f8fafc;
+      --shadow:0 18px 50px rgba(0,0,0,.06);
+      --shadow-lg:0 24px 80px rgba(0,0,0,.22);
+      --radius:28px;
     }
-    setError("Access code is incorrect.");
-  };
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .hidden{display:none !important}
+    .page{min-height:100vh}
+    .container{width:min(1280px,calc(100% - 32px));margin:0 auto}
+    .login-shell{min-height:100vh;background:
+      radial-gradient(circle at top left, rgba(215,25,32,.28), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(255,255,255,.08), transparent 25%),
+      linear-gradient(180deg,#070b10,#101722 70%,#0b1017);
+      color:#fff;display:flex;align-items:center}
+    .login-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:48px 0}
+    .pill{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);padding:10px 16px;border-radius:999px;font-size:14px;color:rgba(255,255,255,.86)}
+    .hero-title{font-size:clamp(42px,6vw,68px);line-height:1.02;letter-spacing:-.03em;margin:24px 0 0;font-weight:700}
+    .hero-copy{max-width:700px;font-size:18px;line-height:1.7;color:rgba(255,255,255,.72);margin-top:20px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin-top:32px}
+    .stat{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);backdrop-filter:blur(8px);padding:18px;border-radius:24px}
+    .stat .v{font-size:34px;font-weight:700}
+    .stat .l{font-size:14px;color:rgba(255,255,255,.65);margin-top:6px}
+    .login-card{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);backdrop-filter:blur(18px);padding:32px;border-radius:32px;box-shadow:0 20px 80px rgba(0,0,0,.35)}
+    .tiny-pill{display:inline-flex;padding:7px 12px;border-radius:999px;background:rgba(215,25,32,.14);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fecaca}
+    .login-card h2{font-size:40px;margin:18px 0 0}
+    .login-card p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.65);margin-top:10px}
+    .field{margin-top:24px}
+    .label{display:block;margin:0 0 10px;font-size:14px;font-weight:600;color:rgba(255,255,255,.88)}
+    .input-wrap{position:relative}
+    .input-wrap input{width:100%;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.2);color:#fff;padding:16px 16px 16px 48px;border-radius:18px;font-size:15px;outline:none}
+    .input-wrap input:focus{border-color:#f87171}
+    .icon-left{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;opacity:.45}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:none;border-radius:18px;padding:15px 18px;font-weight:700;cursor:pointer;transition:.2s ease;font-size:15px}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-red{width:100%;background:var(--red);color:#fff;box-shadow:0 12px 30px rgba(215,25,32,.24);margin-top:16px}
+    .btn-red:hover{background:var(--red-dark)}
+    .error{font-size:14px;color:#fecaca;margin-top:12px}
+    .note{margin-top:26px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.18);padding:20px;border-radius:24px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.66)}
+    .note strong{color:#fff}
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("swfDealerPortalAuthed");
-    setIsAuthed(false);
-    setCode("");
-  };
+    .topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(255,255,255,.92);backdrop-filter:blur(16px)}
+    .topbar-inner{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:16px 0}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand img{height:36px;width:auto}
+    .eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+    .brand h1{font-size:30px;letter-spacing:-.03em;margin:4px 0 0}
+    .toolbar{display:flex;gap:12px;align-items:center}
+    .search{position:relative;min-width:320px}
+    .search input{width:100%;padding:14px 16px 14px 42px;border:1px solid var(--line);border-radius:18px;background:#f9fafb;font-size:14px;outline:none}
+    .search input:focus{border-color:#f5b0b3;background:#fff}
+    .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;opacity:.45}
+    .btn-light{background:#fff;border:1px solid var(--line);color:#374151;padding:13px 16px}
+    .btn-light:hover{border-color:#f5b0b3;color:var(--red)}
 
-  if (!mounted) return null;
+    .section{margin-top:32px}
+    .hero-card{overflow:hidden;border-radius:32px;background:linear-gradient(180deg,#0f141d,#0b0f14);color:#fff;box-shadow:var(--shadow-lg)}
+    .hero-card-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;padding:36px 40px}
+    .hero-card h2{font-size:52px;letter-spacing:-.04em;line-height:1.02;margin:18px 0 0}
+    .hero-card p{font-size:17px;line-height:1.7;color:rgba(255,255,255,.72);max-width:760px;margin-top:18px}
+    .quick-links{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .quick-link{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);padding:20px;border-radius:24px;transition:.2s ease}
+    .quick-link:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
+    .quick-link .row{display:flex;align-items:center;gap:14px;color:#fff}
+    .quick-link .icon-box{display:grid;place-items:center;width:48px;height:48px;border-radius:18px;background:rgba(255,255,255,.1)}
+    .quick-link .title{font-weight:700}
+    .quick-link .sub{font-size:13px;color:rgba(255,255,255,.58);margin-top:4px}
 
-  if (!isAuthed) {
-    return (
-      <div className="min-h-screen bg-neutral-950 text-white">
-        <div className="relative isolate min-h-screen overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,27,35,.28),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,.08),transparent_25%)]" />
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .mini-stat{padding:20px}
+    .mini-stat .v{font-size:40px;font-weight:700}
+    .mini-stat .l{font-size:14px;color:var(--muted);margin-top:6px}
 
-          <div className="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-6 py-12 lg:grid-cols-[1.15fr_.85fr] lg:px-10">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-sm">
-                <ShieldCheck className="h-4 w-4" /> Dealer Access Portal
-              </div>
-              <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-tight tracking-tight md:text-6xl">
-                SWF USA Dealer Portal
-              </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-white/70 md:text-lg">
-                A standalone resource hub for approved dealers with brochures, machine imagery, support links, marketing collateral, and current inventory resources in one place.
-              </p>
+    .library{padding:28px}
+    .section-head{display:flex;gap:16px;align-items:flex-start}
+    .section-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:18px;background:#fef2f2;color:var(--red)}
+    .section-head h3{font-size:34px;letter-spacing:-.03em;margin:0}
+    .section-head p{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.7;max-width:850px}
+    .machine-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:24px}
+    .machine{overflow:hidden}
+    .machine-img{aspect-ratio:4/3;background:#fff;padding:24px;border-bottom:1px solid var(--line)}
+    .machine-img img{width:100%;height:100%;object-fit:contain}
+    .machine-body{padding:24px}
+    .chip{display:inline-flex;background:#f3f4f6;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#374151}
+    .machine h4{font-size:34px;letter-spacing:-.03em;margin:14px 0 0}
+    .spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .spec{background:#f9fafb;border-radius:18px;padding:14px}
+    .spec .k{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b7280}
+    .spec .v{margin-top:6px;font-size:14px;font-weight:600;color:#111827;line-height:1.45}
+    .highlights{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+    .highlight{border:1px solid var(--line);border-radius:18px;padding:14px;font-size:14px;color:#374151;background:#fff}
 
-              <div className="mt-8 grid max-w-xl gap-4 sm:grid-cols-3">
-                <StatCard value="1" label="Portal home" />
-                <StatCard value="6" label="Resource groups" />
-                <StatCard value="24/7" label="Dealer access" />
-              </div>
-            </div>
+    .resource-stack{display:grid;gap:24px}
+    .resource-card{padding:24px}
+    .resource-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:20px}
+    .resource-item{display:block;border:1px solid var(--line);background:#f9fafb;padding:18px;border-radius:24px;transition:.2s ease}
+    .resource-item:hover{transform:translateY(-1px);border-color:#f5b0b3;background:#fff;box-shadow:var(--shadow)}
+    .resource-row{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .resource-title{font-size:17px;font-weight:700;color:#111827}
+    .resource-note{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.55}
+    .badge{display:inline-flex;padding:7px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:11px;font-weight:700;color:#374151;white-space:nowrap}
+    .resource-open{display:flex;align-items:center;gap:8px;color:var(--red);font-size:14px;font-weight:700;margin-top:14px}
 
-            <div className="rounded-[32px] border border-white/10 bg-white/8 p-6 shadow-[0_20px_80px_rgba(0,0,0,.35)] backdrop-blur-xl md:p-8">
-              <div className="inline-flex rounded-full bg-red-600/15 px-3 py-1 text-xs font-medium uppercase tracking-[0.14em] text-red-200">
-                Sign In
-              </div>
-              <h2 className="mt-4 text-3xl font-semibold">Dealer Login</h2>
-              <p className="mt-2 text-sm leading-6 text-white/65">
-                For launch, this uses a simple shared access code so the portal can stay fully standalone and easy to host.
-              </p>
+    .empty{padding:40px;text-align:center;border:2px dashed #d1d5db}
+    .empty h3{margin:0;font-size:28px}
+    .empty p{margin:10px 0 0;font-size:14px;color:var(--muted)}
 
-              <form onSubmit={handleLogin} className="mt-8 space-y-4">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-white/85">Access code</label>
-                  <div className="relative">
-                    <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-                    <input
-                      value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                      placeholder="Enter dealer access code"
-                      className="w-full rounded-2xl border border-white/10 bg-black/20 px-11 py-3.5 text-white placeholder:text-white/35 outline-none transition focus:border-red-400"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-2xl bg-red-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-red-950/30 transition hover:-translate-y-0.5 hover:bg-red-700"
-                >
-                  Enter Portal
-                </button>
-
-                {error ? <div className="text-sm text-red-300">{error}</div> : null}
-              </form>
-
-              <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-5 text-sm text-white/65">
-                <div className="font-medium text-white">Recommended next step after launch</div>
-                <p className="mt-2 leading-6">
-                  Swap this shared-code gate for real authentication later if you want dealer-specific accounts, password resets, or tighter file protection.
-                </p>
-              </div>
-            </div>
+    @media (max-width: 1100px){
+      .login-grid,.hero-card-inner,.machine-grid{grid-template-columns:1fr}
+      .hero-card h2{font-size:42px}
+    }
+    @media (max-width: 820px){
+      .topbar-inner{flex-direction:column;align-items:stretch}
+      .toolbar{flex-direction:column;align-items:stretch}
+      .search{min-width:0}
+      .stats,.stats-grid,.quick-links,.resource-grid,.spec-grid,.highlights{grid-template-columns:1fr}
+      .brand h1{font-size:26px}
+      .library,.resource-card{padding:20px}
+      .machine h4{font-size:28px}
+    }
+  </style>
+</head>
+<body>
+  <div id="loginPage" class="page login-shell">
+    <div class="container">
+      <div class="login-grid">
+        <div>
+          <div class="pill">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            Dealer Access Portal
           </div>
+          <h1 class="hero-title">SWF USA Dealer Portal</h1>
+          <div class="hero-copy">A standalone resource hub for approved dealers with brochures, machine imagery, support links, marketing collateral, and current inventory resources in one place.</div>
+          <div class="stats">
+            <div class="stat"><div class="v">1</div><div class="l">Portal home</div></div>
+            <div class="stat"><div class="v">6</div><div class="l">Resource groups</div></div>
+            <div class="stat"><div class="v">24/7</div><div class="l">Dealer access</div></div>
+          </div>
+        </div>
+        <div class="login-card">
+          <div class="tiny-pill">Sign In</div>
+          <h2>Dealer Login</h2>
+          <p>For launch, this uses a simple shared access code so the portal can stay fully standalone and easy to host.</p>
+          <form id="loginForm">
+            <div class="field">
+              <label class="label" for="accessCode">Access code</label>
+              <div class="input-wrap">
+                <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input id="accessCode" type="password" placeholder="Enter dealer access code" autocomplete="current-password" />
+              </div>
+              <div id="loginError" class="error hidden">Access code is incorrect.</div>
+            </div>
+            <button class="btn btn-red" type="submit">Enter Portal</button>
+          </form>
+          <div class="note"><strong>Recommended next step after launch</strong><br>Swap this shared-code gate for real authentication later if you want dealer-specific accounts, password resets, or tighter file protection.</div>
         </div>
       </div>
-    );
-  }
+    </div>
+  </div>
 
-  return (
-    <div className="min-h-screen bg-[#f5f6f8] text-neutral-950">
-      <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/92 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+  <div id="portalPage" class="page hidden">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <img src="https://cdn.shopify.com/s/files/1/1236/6284/files/swfnobg.png?v=1759258611" alt="SWF USA">
           <div>
-            <div className="flex items-center gap-3">
-              <img src={SWF_LOGO} alt="SWF USA" className="h-9 w-auto" />
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">SWF USA</div>
-            </div>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight">Dealer Resource Portal</h1>
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative min-w-[280px]">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search resources"
-                className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-11 py-3 text-sm outline-none transition focus:border-red-300 focus:bg-white"
-              />
-            </div>
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-700 transition hover:border-red-200 hover:text-red-700"
-            >
-              <LogOut className="h-4 w-4" /> Log Out
-            </button>
+            <div class="eyebrow">SWF USA</div>
+            <h1>Dealer Resource Portal</h1>
           </div>
         </div>
-      </header>
+        <div class="toolbar">
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="searchInput" type="search" placeholder="Search resources">
+          </label>
+          <button id="logoutBtn" class="btn btn-light" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-8 lg:px-10 lg:py-10">
-        <section className="overflow-hidden rounded-[32px] bg-neutral-950 text-white shadow-[0_24px_80px_rgba(0,0,0,.22)]">
-          <div className="grid gap-8 px-6 py-8 md:px-8 md:py-10 lg:grid-cols-[1.15fr_.85fr] lg:px-10">
+    <main class="container" style="padding:32px 0 40px">
+      <section class="hero-card section">
+        <div class="hero-card-inner">
+          <div>
+            <div class="pill" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              Approved Dealer Access
+            </div>
+            <h2>Everything your dealers need, in one place.</h2>
+            <p>This portal is designed to be a simple standalone hub for sales tools, support resources, marketing assets, machine media, and live inventory references.</p>
+          </div>
+          <div class="quick-links" id="quickLinks"></div>
+        </div>
+      </section>
+
+      <section class="section stats-grid">
+        <div class="card mini-stat"><div class="v">6</div><div class="l">Core resource sections</div></div>
+        <div class="card mini-stat"><div class="v">1</div><div class="l">Single-page resource hub</div></div>
+        <div class="card mini-stat"><div class="v">Standalone</div><div class="l">Built to host on GitHub and map to portal.swf-usa.com</div></div>
+      </section>
+
+      <section class="section card library">
+        <div class="section-head">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3>SWF Machine Library</h3>
+            <p>Pulled from the current SWF machine HTML pages so dealers have a clean visual reference for the main lineup right inside the portal.</p>
+          </div>
+        </div>
+        <div id="machineGrid" class="machine-grid"></div>
+      </section>
+
+      <section id="resourceStack" class="section resource-stack"></section>
+      <section id="emptyState" class="section card empty hidden">
+        <h3>No resources found</h3>
+        <p>Try a broader search term like brochure, inventory, support, or images.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const ACCESS_CODE = 'SWFDEALER';
+    const STORAGE_KEY = 'swfDealerPortalAuthed';
+
+    const quickLinks = [
+      { label: 'Knowledgebase', href: 'https://stitch-it-support-site.web.app/', sub: 'Quick access', icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>' },
+      { label: 'Support Ticket', href: 'https://stitch-it-support-site.web.app/supportForm', sub: 'Quick access', icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 1 0-5.4 5.9L12 15l2.7-2.8a4 4 0 0 0 0-5.9Z"/><path d="M12 15v6"/></svg>' },
+      { label: 'Current Inventory', href: '#', sub: 'Quick access', icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>' },
+      { label: 'Brand Assets', href: '#', sub: 'Quick access', icon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 22a10 10 0 1 1 10-10c0 1.1-.9 2-2 2h-2.5a1.5 1.5 0 0 0 0 3H17a3 3 0 0 1-3 3Z"/></svg>' }
+    ];
+
+    const machineCards = [
+      {name:'KX Series (Tubular)',category:'Multi-Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX_6_head.png?v=1771959407',speed:'1,200 SPM',field:'UH: 400 x 450 mm | UK: 500 x 450 mm',memory:'40,000,000 stitches',highlights:['15.1 inch LCD control','Smart tension system','EZ-Change cap system','Built for high-volume production']},
+      {name:'KE Series',category:'Multi-Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/ke-8-head.jpg?v=1771961190',speed:'1,000 SPM',field:'450 x 360 mm',memory:'2,000,000 stitches',highlights:['Economy multi-head platform','15.1 inch touch LCD','Commercial production workflow','Cap, flat, and tubular capable']},
+      {name:'KX-T1502D',category:'Dual Function',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX-1X1-e1739525153532-1024x916.png?v=1772740296',speed:'1,200 SPM',field:'520 x 360 mm',memory:'40,000,000 stitches',highlights:['Runs as one unit or two independent heads','15.1 inch full-touch LCD','Smart Action Presser Foot','EZ-Change cap system']},
+      {name:'KX-T1501',category:'Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX_single.jpg?v=1759260196',speed:'1,200 SPM',field:'520 x 360 mm border',memory:'40,000,000 stitches',highlights:['High performance 15-needle platform','15.1 inch touch LCD','Smart Tension option','Cap focused setup']},
+      {name:'ES-T1501',category:'Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/es_full_size.jpg?v=1759260197',speed:'1,000 SPM',field:'520 x 360 mm tubular / border',memory:'2,000,000 stitches',highlights:['Full-size commercial single head','15-needle platform','Cap setup included','Great for growing decorators']},
+      {name:'MAS-15',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/es_compact_ce76207c-a665-4f6f-8335-a67fc84e26c4.jpg?v=1759260197',speed:'1,000 SPM',field:'360 x 360 mm',memory:'2,000,000 stitches',highlights:['Compact 15-needle platform','Cap ready','Smaller footprint','Reliable daily output']},
+      {name:'MAS-12',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/MAS-12.jpg?v=1759260197',speed:'1,000 SPM',field:'360 x 360 mm',memory:'2,000,000 stitches',highlights:['Compact 12-needle platform','Cap ready','Great for small spaces','Easy daily production']},
+      {name:'MAS-7',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/Sunny_6.jpg?v=1759260197',speed:'1,000 SPM',field:'300 x 200 mm',memory:'2,000,000 stitches',highlights:['7-needle compact platform','Portable setup','Built-in designs and fonts','Flat hoop workflow']}
+    ];
+
+    const resources = [
+      {category:'Support Links',icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0v5a3 3 0 0 0 3 3h1"/><path d="M15 13a3 3 0 0 0 3-3V8"/><path d="M12 19v3"/><path d="M12 19a3 3 0 0 0 3-3v-1"/></svg>',description:'Quick access to SWF support and service resources.',items:[{title:'Knowledgebase',type:'Link',note:'Service documentation and support reference',href:'https://stitch-it-support-site.web.app/'},{title:'Start a Support Ticket',type:'Link',note:'Open dealer support request',href:'https://stitch-it-support-site.web.app/supportForm'}]},
+      {category:'Machine Brochures',icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>',description:'Space reserved for current brochure downloads and one-page PDF sell sheets.',items:[{title:'KX Series Brochure',type:'PDF',note:'Add final brochure link',href:'#'},{title:'KE Series Brochure',type:'PDF',note:'Add final brochure link',href:'#'},{title:'Single Head Brochures',type:'PDF',note:'KX, ES, and MAS family brochures',href:'#'},{title:'Warranty and Protection Docs',type:'PDF',note:'Dealer reference materials',href:'#'}]},
+      {category:'Marketing Collateral',icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 18-5v12L3 13v-2Z"/><path d="M11.6 16.8a3 3 0 1 1-5.2 2.4"/></svg>',description:'Reserved for co-branded flyers, social graphics, and dealer-facing sales material.',items:[{title:'Co-Branded Flyers',type:'Folder',note:'Add shared folder link',href:'#'},{title:'Social Media Graphics',type:'Folder',note:'Dealer-ready post graphics',href:'#'},{title:'Email Templates',type:'DOC',note:'Sales email examples and messaging',href:'#'},{title:'Finance Promo Assets',type:'Folder',note:'BYLD collateral and promos',href:'#'}]},
+      {category:'Inventory',icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',description:'Reserved for live current inventory, incoming units, and dealer availability tracking.',items:[{title:'Current Inventory',type:'Sheet',note:'Add live inventory source',href:'#'},{title:'Incoming Units',type:'Sheet',note:'Expected arrivals and ETAs',href:'#'},{title:'Demo Machines',type:'Sheet',note:'Demo opportunities and status',href:'#'}]}
+    ];
+
+    const loginPage = document.getElementById('loginPage');
+    const portalPage = document.getElementById('portalPage');
+    const loginForm = document.getElementById('loginForm');
+    const accessCode = document.getElementById('accessCode');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const searchInput = document.getElementById('searchInput');
+    const quickLinksEl = document.getElementById('quickLinks');
+    const machineGrid = document.getElementById('machineGrid');
+    const resourceStack = document.getElementById('resourceStack');
+    const emptyState = document.getElementById('emptyState');
+
+    function togglePages(isAuthed){
+      loginPage.classList.toggle('hidden', isAuthed);
+      portalPage.classList.toggle('hidden', !isAuthed);
+    }
+
+    function openAttrs(href){
+      return href !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+    }
+
+    function renderQuickLinks(){
+      quickLinksEl.innerHTML = quickLinks.map(link => `
+        <a class="quick-link" href="${link.href}"${openAttrs(link.href)}>
+          <div class="row">
+            <div class="icon-box">${link.icon}</div>
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
-                <ShieldCheck className="h-4 w-4" /> Approved Dealer Access
-              </div>
-              <h2 className="mt-5 text-4xl font-semibold tracking-tight">Everything your dealers need, in one place.</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">
-                This portal is designed to be a simple standalone hub for sales tools, support resources, marketing assets, machine media, and live inventory references.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {quickLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="rounded-3xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-0.5 hover:bg-white/10"
-                  >
-                    <div className="flex items-center gap-3 text-white">
-                      <div className="rounded-2xl bg-white/10 p-3">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <div className="font-semibold">{link.label}</div>
-                        <div className="text-sm text-white/55">Quick access</div>
-                      </div>
-                    </div>
-                  </a>
-                );
-              })}
+              <div class="title">${link.label}</div>
+              <div class="sub">${link.sub}</div>
             </div>
           </div>
-        </section>
+        </a>
+      `).join('');
+    }
 
-        <section className="mt-8 grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
-            <div className="text-3xl font-semibold">6</div>
-            <div className="mt-1 text-sm text-neutral-600">Core resource sections</div>
-          </div>
-          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
-            <div className="text-3xl font-semibold">1</div>
-            <div className="mt-1 text-sm text-neutral-600">Single-page resource hub</div>
-          </div>
-          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-[0_14px_35px_rgba(0,0,0,.05)]">
-            <div className="text-3xl font-semibold">Standalone</div>
-            <div className="mt-1 text-sm text-neutral-600">Built to host on GitHub and map to portal.swf-usa.com</div>
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-[32px] border border-neutral-200 bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,.06)] lg:p-8">
-          <div className="flex items-start gap-4">
-            <div className="rounded-2xl bg-red-50 p-3 text-red-600">
-              <ImageIcon className="h-5 w-5" />
+    function renderMachines(term=''){
+      const q = term.trim().toLowerCase();
+      const filtered = machineCards.filter(machine => {
+        const haystack = `${machine.name} ${machine.category} ${machine.speed} ${machine.field} ${machine.memory} ${machine.highlights.join(' ')}`.toLowerCase();
+        return haystack.includes(q);
+      });
+      machineGrid.innerHTML = filtered.map(machine => `
+        <article class="card machine searchable">
+          <div class="machine-img"><img src="${machine.image}" alt="${machine.name}"></div>
+          <div class="machine-body">
+            <div class="chip">${machine.category}</div>
+            <h4>${machine.name}</h4>
+            <div class="spec-grid">
+              <div class="spec"><div class="k">Speed</div><div class="v">${machine.speed}</div></div>
+              <div class="spec"><div class="k">Field</div><div class="v">${machine.field}</div></div>
+              <div class="spec"><div class="k">Memory</div><div class="v">${machine.memory}</div></div>
             </div>
+            <div class="highlights">${machine.highlights.map(x=>`<div class="highlight">${x}</div>`).join('')}</div>
+          </div>
+        </article>
+      `).join('');
+      return filtered.length;
+    }
+
+    function renderResources(term=''){
+      const q = term.trim().toLowerCase();
+      const filteredSections = resources.map(section => {
+        const items = section.items.filter(item => {
+          const haystack = `${section.category} ${section.description} ${item.title} ${item.note} ${item.type}`.toLowerCase();
+          return haystack.includes(q);
+        });
+        return {...section, items};
+      }).filter(section => section.items.length);
+
+      resourceStack.innerHTML = filteredSections.map(section => `
+        <section class="card resource-card searchable">
+          <div class="section-head">
+            <div class="section-icon">${section.icon}</div>
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-neutral-950">SWF Machine Library</h2>
-              <p className="mt-1 max-w-3xl text-sm leading-6 text-neutral-600">
-                Pulled from the current SWF machine HTML pages so dealers have a clean visual reference for the main lineup right inside the portal.
-              </p>
+              <h3 style="font-size:30px">${section.category}</h3>
+              <p>${section.description}</p>
             </div>
           </div>
-
-          <div className="mt-6 grid gap-6 xl:grid-cols-2">
-            {machineCards
-              .filter((machine) => {
-                const haystack = `${machine.name} ${machine.category} ${machine.speed} ${machine.field} ${machine.memory} ${machine.highlights.join(" ")}`.toLowerCase();
-                return haystack.includes(search.toLowerCase());
-              })
-              .map((machine) => (
-                <MachineCard key={machine.name} machine={machine} />
-              ))}
+          <div class="resource-grid">
+            ${section.items.map(item => `
+              <a class="resource-item" href="${item.href}"${openAttrs(item.href)}>
+                <div class="resource-row">
+                  <div>
+                    <div class="resource-title">${item.title}</div>
+                    <div class="resource-note">${item.note}</div>
+                  </div>
+                  <span class="badge">${item.type}</span>
+                </div>
+                <div class="resource-open">Open Resource
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+                </div>
+              </a>
+            `).join('')}
           </div>
         </section>
+      `).join('');
+      return filteredSections.length;
+    }
 
-        <section className="mt-8 space-y-6">
-          {filteredSections.length ? (
-            filteredSections.map((section) => <SectionCard key={section.category} section={section} search={search} />)
-          ) : (
-            <div className="rounded-[28px] border border-dashed border-neutral-300 bg-white p-10 text-center shadow-[0_14px_35px_rgba(0,0,0,.04)]">
-              <div className="text-lg font-semibold">No resources found</div>
-              <p className="mt-2 text-sm text-neutral-600">Try a broader search term like brochure, inventory, support, or images.</p>
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
-  );
-}
+    function renderAll(term=''){
+      const machineCount = renderMachines(term);
+      const resourceCount = renderResources(term);
+      emptyState.classList.toggle('hidden', machineCount > 0 || resourceCount > 0);
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if ((accessCode.value || '').trim().toUpperCase() === ACCESS_CODE) {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        loginError.classList.add('hidden');
+        togglePages(true);
+        renderAll();
+      } else {
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      accessCode.value = '';
+      togglePages(false);
+    });
+
+    searchInput.addEventListener('input', (e) => renderAll(e.target.value));
+
+    renderQuickLinks();
+    const saved = localStorage.getItem(STORAGE_KEY) === 'true';
+    togglePages(saved);
+    if (saved) renderAll();
+  </script>
+</body>
+</html>
