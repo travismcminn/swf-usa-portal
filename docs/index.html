@@ -125,15 +125,44 @@
     .empty h3{margin:0;font-size:28px}
     .empty p{margin:10px 0 0;font-size:14px;color:var(--muted)}
 
+
+    .order-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+    .order-intro{padding:28px}
+    .order-intro h3{font-size:34px;letter-spacing:-.03em;margin:0}
+    .order-intro p{margin:10px 0 0;color:var(--muted);font-size:14px;line-height:1.7;max-width:760px}
+    .order-list{display:grid;gap:12px;margin-top:22px}
+    .order-list .item{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:#fff}
+    .order-list .num{width:28px;height:28px;border-radius:999px;background:#fef2f2;color:var(--red);display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 28px}
+    .order-side{display:grid;gap:16px}
+    .order-mini{padding:20px}
+    .order-mini h4{margin:0;font-size:18px}
+    .order-mini p{margin:8px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
+    .order-form-card{padding:28px}
+    .order-form{display:grid;gap:24px}
+    .form-section{display:grid;gap:14px}
+    .form-section h4{margin:0;font-size:18px;letter-spacing:-.02em}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .form-grid .full{grid-column:1 / -1}
+    .form-control{display:grid;gap:8px}
+    .form-control label{font-size:13px;font-weight:700;color:#374151}
+    .form-control input,.form-control select,.form-control textarea{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:16px;background:#fff;font:inherit;color:var(--text);outline:none}
+    .form-control textarea{min-height:110px;resize:vertical}
+    .form-control input:focus,.form-control select:focus,.form-control textarea:focus{border-color:#f5b0b3;box-shadow:0 0 0 4px rgba(215,25,32,.08)}
+    .form-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .submit-note{font-size:13px;color:var(--muted);line-height:1.6}
+    .status{padding:14px 16px;border-radius:16px;font-size:14px;font-weight:600}
+    .status.success{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
+    .status.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+
     @media (max-width: 1100px){
-      .login-grid,.hero-card-inner,.machine-grid{grid-template-columns:1fr}
+      .login-grid,.hero-card-inner,.machine-grid,.order-wrap{grid-template-columns:1fr}
       .hero-card h2{font-size:42px}
     }
     @media (max-width: 820px){
       .topbar-inner{flex-direction:column;align-items:stretch}
       .toolbar{flex-direction:column;align-items:stretch}
       .search{min-width:0}
-      .stats,.stats-grid,.quick-links,.resource-grid,.spec-grid,.highlights{grid-template-columns:1fr}
+      .stats,.stats-grid,.quick-links,.resource-grid,.spec-grid,.highlights,.form-grid{grid-template-columns:1fr}
       .brand h1{font-size:26px}
       .library,.resource-card{padding:20px}
       .machine h4{font-size:28px}
@@ -222,6 +251,185 @@
         <div class="card mini-stat"><div class="v">Standalone</div><div class="l">Built to host on GitHub and map to portal.swf-usa.com</div></div>
       </section>
 
+
+      <section class="section card">
+        <div class="order-wrap">
+          <div class="order-intro">
+            <div class="section-head">
+              <div class="section-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15V6"/><path d="M18.5 3.5 12 7 5.5 3.5"/><path d="M5.5 3.5 3 5v9l9 5 9-5"/><path d="M12 22v-5"/></svg>
+              </div>
+              <div>
+                <h3>Submit a Dealer Order</h3>
+                <p>Use this standardized order form so every SWF dealer order comes through the same way. Once submitted, the order is pushed to Zapier and can be routed into a clean internal PO email workflow for Travis, Oliver, Blaine, and Jessica.</p>
+              </div>
+            </div>
+
+            <div class="order-list">
+              <div class="item"><div class="num">1</div><div><strong>Dealer submits order</strong><div class="resource-note">Enter dealer, customer, shipping, machine, and payment details.</div></div></div>
+              <div class="item"><div class="num">2</div><div><strong>Webhook fires to Zapier</strong><div class="resource-note">Your Zap catches the submission instantly using the portal webhook.</div></div></div>
+              <div class="item"><div class="num">3</div><div><strong>Internal PO email gets sent</strong><div class="resource-note">Zapier formats the order into your standardized internal order summary.</div></div></div>
+            </div>
+          </div>
+
+          <div class="order-side">
+            <div class="card order-mini">
+              <h4>Notification recipients</h4>
+              <p>travis@stitchitintl.com<br>oliver@stitchitintl.com<br>blaine@stitchitintl.com<br>jessica@stitchitintl.com</p>
+            </div>
+            <div class="card order-mini">
+              <h4>Phase 1 setup</h4>
+              <p>No file upload needed. This keeps the form light, fast, and easy to maintain while still standardizing order intake.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section card order-form-card">
+        <div class="section-head">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+          </div>
+          <div>
+            <h3>Order Submission Form</h3>
+            <p>Required fields are marked and should give your team everything needed to process a new order without chasing down details later.</p>
+          </div>
+        </div>
+
+        <form id="orderForm" class="order-form">
+          <div class="form-section">
+            <h4>Dealer Information</h4>
+            <div class="form-grid">
+              <div class="form-control">
+                <label for="dealerCompany">Dealer Company Name *</label>
+                <input id="dealerCompany" name="dealerCompany" required>
+              </div>
+              <div class="form-control">
+                <label for="dealerContact">Dealer Contact Name *</label>
+                <input id="dealerContact" name="dealerContact" required>
+              </div>
+              <div class="form-control">
+                <label for="dealerEmail">Dealer Email *</label>
+                <input id="dealerEmail" name="dealerEmail" type="email" required>
+              </div>
+              <div class="form-control">
+                <label for="dealerPhone">Dealer Phone</label>
+                <input id="dealerPhone" name="dealerPhone">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>Customer and Shipping Information</h4>
+            <div class="form-grid">
+              <div class="form-control">
+                <label for="customerCompany">Customer / Company Name *</label>
+                <input id="customerCompany" name="customerCompany" required>
+              </div>
+              <div class="form-control">
+                <label for="shipToCompany">Ship To Company</label>
+                <input id="shipToCompany" name="shipToCompany">
+              </div>
+              <div class="form-control full">
+                <label for="shipAddress">Ship To Address *</label>
+                <input id="shipAddress" name="shipAddress" required>
+              </div>
+              <div class="form-control">
+                <label for="shipCity">City *</label>
+                <input id="shipCity" name="shipCity" required>
+              </div>
+              <div class="form-control">
+                <label for="shipState">State *</label>
+                <input id="shipState" name="shipState" required>
+              </div>
+              <div class="form-control">
+                <label for="shipZip">Zip *</label>
+                <input id="shipZip" name="shipZip" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4>Order Details</h4>
+            <div class="form-grid">
+              <div class="form-control">
+                <label for="machineModel">Machine Model *</label>
+                <select id="machineModel" name="machineModel" required>
+                  <option value="">Select machine model</option>
+                  <option>KX Series Multi-Head</option>
+                  <option>KE Series Multi-Head</option>
+                  <option>KX-T1502D</option>
+                  <option>KX-T1501</option>
+                  <option>ES-T1501</option>
+                  <option>MAS-15</option>
+                  <option>MAS-12</option>
+                  <option>MAS-7</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="numberOfHeads">Number of Heads</label>
+                <input id="numberOfHeads" name="numberOfHeads">
+              </div>
+              <div class="form-control">
+                <label for="quantity">Quantity *</label>
+                <input id="quantity" name="quantity" type="number" min="1" step="1" required>
+              </div>
+              <div class="form-control">
+                <label for="paymentType">Payment Type *</label>
+                <select id="paymentType" name="paymentType" required>
+                  <option value="">Select payment type</option>
+                  <option>Financing</option>
+                  <option>Cash</option>
+                  <option>Lease</option>
+                  <option>Unknown</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="softwareNeeded">Software Needed</label>
+                <select id="softwareNeeded" name="softwareNeeded">
+                  <option value="">Select option</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Unknown</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label for="installationRequested">Installation Requested</label>
+                <select id="installationRequested" name="installationRequested">
+                  <option value="">Select option</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>Unknown</option>
+                </select>
+              </div>
+              <div class="form-control full">
+                <label for="accessories">Accessories / Add-ons</label>
+                <input id="accessories" name="accessories">
+              </div>
+              <div class="form-control">
+                <label for="installTiming">Requested Install Timing</label>
+                <input id="installTiming" name="installTiming" placeholder="ASAP, next month, etc.">
+              </div>
+              <div class="form-control">
+                <label for="dealerPoNumber">Dealer PO Number</label>
+                <input id="dealerPoNumber" name="dealerPoNumber">
+              </div>
+              <div class="form-control full">
+                <label for="additionalNotes">Additional Notes</label>
+                <textarea id="additionalNotes" name="additionalNotes"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button id="submitOrderBtn" class="btn btn-red" type="submit" style="width:auto;min-width:220px;margin-top:0">Submit Order</button>
+            <div class="submit-note">This form sends the order to your Zapier webhook for downstream formatting and email routing.</div>
+          </div>
+
+          <div id="orderStatus" class="status hidden"></div>
+        </form>
+      </section>
+
       <section class="section card library">
         <div class="section-head">
           <div class="section-icon">
@@ -257,12 +465,12 @@
     const machineCards = [
       {name:'KX Series (Tubular)',category:'Multi-Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX_6_head.png?v=1771959407',speed:'1,200 SPM',field:'UH: 400 x 450 mm | UK: 500 x 450 mm',memory:'40,000,000 stitches',highlights:['15.1 inch LCD control','Smart tension system','EZ-Change cap system','Built for high-volume production']},
       {name:'KE Series',category:'Multi-Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/Ke_Series.jpg?v=1759259733',speed:'1,000 SPM',field:'Border: 400 x 450 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Economy multi-head platform','15.1 inch full touch LCD','270 degree cap frame','Commercial production workflow']},
-      {name:'KX-T1502D',category:'Dual Function',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX-1X1-e1739525153532-1024x916.png?v=1772740296',speed:'1,200 SPM',field:'Tubular / Border: 520 x 360 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Runs as one unit or two independent heads','15.1 inch full touch LCD','Smart Action Presser Foot','EZ-Change cap system']},
+      {name:'KX-T1502D',category:'Dual Function',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX-1X1-e1739525153532-1024x916.png?v=1772740296',speed:'1,200 SPM normal | 1,000 SPM cap',field:'Tubular / Border: 520 x 360 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Runs as one unit or two independent heads','15.1 inch full-touch LCD','Smart Action Presser Foot','EZ-Change cap system']},
       {name:'KX-T1501',category:'Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/KX_single.jpg?v=1759260196',speed:'1,200 SPM',field:'Border: 520 x 360 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['High performance 15-needle platform','15.1 inch touch LCD','Smart Tension option','Cap focused setup']},
       {name:'ES-T1501',category:'Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/es_full_size.jpg?v=1759260197',speed:'1,200 rpm',field:'Border / Tubular: 520 x 360 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Full size commercial setup','15-needle platform','Cap ready','Large sewing fields']},
       {name:'MAS-15',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/es_compact_ce76207c-a665-4f6f-8335-a67fc84e26c4.jpg?v=1759260197',speed:'1,200 rpm',field:'Tubular: 460 x 300 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Compact footprint','15 needle versatility','Cap plus tubular support','Built for reliable daily output']},
-      {name:'MAS-12',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/MAS-12.jpg?v=1759260197',speed:'1,000 rpm',field:'Flat: 14 x 9 in (310 x 180 mm) | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['Compact commercial setup','12-needle platform','10.4 inch color LCD','Cap plus tubular ready']},
-      {name:'MAS-7',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/Sunny_6.jpg?v=1759260197',speed:'800 rpm',field:'Flat: 240 x 200 mm | Cap: 360 x 75 mm',memory:'40,000,000 stitches',highlights:['7-needle compact platform','8 inch color touch screen','Cap system included','Built-in designs, fonts, and photo stitch support']}
+      {name:'MAS-12',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/MAS-12.jpg?v=1759260197',speed:'1,000 rpm',field:'Flat: 14 x 9 in (310 x 180 mm) | Cap: 360 x 75 mm',memory:'4,000,000 stitches',highlights:['Compact commercial setup','12-needle platform','10.4 inch color LCD','Cap plus tubular ready']},
+      {name:'MAS-7',category:'Compact Single Head',image:'https://cdn.shopify.com/s/files/1/1236/6284/files/Sunny_6.jpg?v=1759260197',speed:'800 rpm',field:'Flat: 240 x 200 mm | Cap: 360 x 75 mm',memory:'Not listed in source file',highlights:['7-needle compact platform','8 inch color touch screen','Cap system included','Built-in designs, fonts, and photo stitch support']}
     ];
 
     const resources = [
@@ -283,6 +491,10 @@
     const machineGrid = document.getElementById('machineGrid');
     const resourceStack = document.getElementById('resourceStack');
     const emptyState = document.getElementById('emptyState');
+    const orderForm = document.getElementById('orderForm');
+    const orderStatus = document.getElementById('orderStatus');
+    const submitOrderBtn = document.getElementById('submitOrderBtn');
+    const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/1812373/uxei4ik/';
 
     function togglePages(isAuthed){
       loginPage.classList.toggle('hidden', isAuthed);
@@ -292,6 +504,46 @@
     function openAttrs(href){
       return href !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
     }
+
+
+    function showOrderStatus(message, type){
+      orderStatus.textContent = message;
+      orderStatus.className = `status ${type}`;
+    }
+
+    orderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitOrderBtn.disabled = true;
+      submitOrderBtn.textContent = 'Submitting...';
+      orderStatus.className = 'status hidden';
+      orderStatus.textContent = '';
+
+      const formData = new FormData(orderForm);
+      const payload = Object.fromEntries(formData.entries());
+      payload.submittedAt = new Date().toISOString();
+      payload.source = 'SWF USA Dealer Portal';
+
+      try {
+        const res = await fetch(ZAPIER_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error(`Webhook failed with status ${res.status}`);
+        }
+
+        orderForm.reset();
+        showOrderStatus('Order submitted successfully. Your internal workflow in Zapier should receive it momentarily.', 'success');
+      } catch (err) {
+        console.error(err);
+        showOrderStatus('Something went wrong while submitting the order. Please try again. If it continues, contact Stitch It directly.', 'error');
+      } finally {
+        submitOrderBtn.disabled = false;
+        submitOrderBtn.textContent = 'Submit Order';
+      }
+    });
 
     function renderQuickLinks(){
       quickLinksEl.innerHTML = quickLinks.map(link => `
