@@ -154,6 +154,16 @@
     .status.success{background:#ecfdf5;color:#166534;border:1px solid #bbf7d0}
     .status.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
 
+
+    .line-items{display:grid;gap:14px}
+    .line-item{border:1px solid var(--line);border-radius:22px;padding:16px;background:#f9fafb}
+    .line-item-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .line-item-title{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+    .btn-outline{background:#fff;border:1px solid var(--line);color:#374151;padding:11px 14px}
+    .btn-outline:hover{border-color:#f5b0b3;color:var(--red)}
+    .line-item-remove{background:#fff;border:1px solid var(--line);color:#6b7280;padding:10px 12px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer}
+    .line-item-remove:hover{border-color:#f5b0b3;color:var(--red)}
+
     @media (max-width: 1100px){
       .login-grid,.hero-card-inner,.machine-grid,.order-wrap{grid-template-columns:1fr}
       .hero-card h2{font-size:42px}
@@ -266,7 +276,7 @@
             </div>
 
             <div class="order-list">
-              <div class="item"><div class="num">1</div><div><strong>Dealer submits order</strong><div class="resource-note">Enter dealer, customer, shipping, machine, and payment details.</div></div></div>
+              <div class="item"><div class="num">1</div><div><strong>Dealer submits order</strong><div class="resource-note">Enter dealer, customer, shipping, and machine details in one standardized format.</div></div></div>
               <div class="item"><div class="num">2</div><div><strong>Webhook fires to Zapier</strong><div class="resource-note">Your Zap catches the submission instantly using the portal webhook.</div></div></div>
               <div class="item"><div class="num">3</div><div><strong>Internal PO email gets sent</strong><div class="resource-note">Zapier formats the order into your standardized internal order summary.</div></div></div>
             </div>
@@ -323,12 +333,24 @@
             <h4>Customer and Shipping Information</h4>
             <div class="form-grid">
               <div class="form-control">
-                <label for="customerCompany">Customer / Company Name *</label>
+                <label for="customerContact">Customer Contact Name *</label>
+                <input id="customerContact" name="customerContact" required>
+              </div>
+              <div class="form-control">
+                <label for="customerCompany">Customer Company Name *</label>
                 <input id="customerCompany" name="customerCompany" required>
               </div>
               <div class="form-control">
                 <label for="shipToCompany">Ship To Company</label>
                 <input id="shipToCompany" name="shipToCompany">
+              </div>
+              <div class="form-control">
+                <label for="installationRequested">Installation Requested *</label>
+                <select id="installationRequested" name="installationRequested" required>
+                  <option value="">Select option</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
               </div>
               <div class="form-control full">
                 <label for="shipAddress">Ship To Address *</label>
@@ -351,65 +373,44 @@
 
           <div class="form-section">
             <h4>Order Details</h4>
-            <div class="form-grid">
-              <div class="form-control">
-                <label for="machineModel">Machine Model *</label>
-                <select id="machineModel" name="machineModel" required>
-                  <option value="">Select machine model</option>
-                  <option>KX Series Multi-Head</option>
-                  <option>KE Series Multi-Head</option>
-                  <option>KX-T1502D</option>
-                  <option>KX-T1501</option>
-                  <option>ES-T1501</option>
-                  <option>MAS-15</option>
-                  <option>MAS-12</option>
-                  <option>MAS-7</option>
-                </select>
+            <div class="line-items" id="lineItems">
+              <div class="line-item">
+                <div class="line-item-top">
+                  <div class="line-item-title">Order Line Item 1</div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-control">
+                    <label>Machine Model *</label>
+                    <select class="line-machine-model" required>
+                      <option value="">Select machine model</option>
+                      <option>KX Series Multi-Head</option>
+                      <option>KE Series Multi-Head</option>
+                      <option>KX-T1502D</option>
+                      <option>KX-T1501</option>
+                      <option>ES-T1501</option>
+                      <option>MAS-15</option>
+                      <option>MAS-12</option>
+                      <option>MAS-7</option>
+                    </select>
+                  </div>
+                  <div class="form-control">
+                    <label>Quantity *</label>
+                    <input class="line-quantity" type="number" min="1" step="1" required value="1">
+                  </div>
+                  <div class="form-control full">
+                    <label>Accessories / Add-ons</label>
+                    <input class="line-accessories" placeholder="Cap frames, stand, hoops, starter kit, etc.">
+                  </div>
+                </div>
               </div>
-              <div class="form-control">
-                <label for="numberOfHeads">Number of Heads</label>
-                <input id="numberOfHeads" name="numberOfHeads">
-              </div>
-              <div class="form-control">
-                <label for="quantity">Quantity *</label>
-                <input id="quantity" name="quantity" type="number" min="1" step="1" required>
-              </div>
-              <div class="form-control">
-                <label for="paymentType">Payment Type *</label>
-                <select id="paymentType" name="paymentType" required>
-                  <option value="">Select payment type</option>
-                  <option>Financing</option>
-                  <option>Cash</option>
-                  <option>Lease</option>
-                  <option>Unknown</option>
-                </select>
-              </div>
-              <div class="form-control">
-                <label for="softwareNeeded">Software Needed</label>
-                <select id="softwareNeeded" name="softwareNeeded">
-                  <option value="">Select option</option>
-                  <option>Yes</option>
-                  <option>No</option>
-                  <option>Unknown</option>
-                </select>
-              </div>
-              <div class="form-control">
-                <label for="installationRequested">Installation Requested</label>
-                <select id="installationRequested" name="installationRequested">
-                  <option value="">Select option</option>
-                  <option>Yes</option>
-                  <option>No</option>
-                  <option>Unknown</option>
-                </select>
-              </div>
-              <div class="form-control full">
-                <label for="accessories">Accessories / Add-ons</label>
-                <input id="accessories" name="accessories">
-              </div>
-              <div class="form-control">
-                <label for="installTiming">Requested Install Timing</label>
-                <input id="installTiming" name="installTiming" placeholder="ASAP, next month, etc.">
-              </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:14px">
+              <button id="addLineItemBtn" class="btn btn-outline" type="button">Add Another Machine</button>
+              <div class="submit-note">Use a separate line item any time the order includes different machine models.</div>
+            </div>
+
+            <div class="form-grid" style="margin-top:14px">
               <div class="form-control">
                 <label for="dealerPoNumber">Dealer PO Number</label>
                 <input id="dealerPoNumber" name="dealerPoNumber">
@@ -494,6 +495,8 @@
     const orderForm = document.getElementById('orderForm');
     const orderStatus = document.getElementById('orderStatus');
     const submitOrderBtn = document.getElementById('submitOrderBtn');
+    const addLineItemBtn = document.getElementById('addLineItemBtn');
+    const lineItems = document.getElementById('lineItems');
     const ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/1812373/uxei4ik/';
 
     function togglePages(isAuthed){
@@ -511,6 +514,77 @@
       orderStatus.className = `status ${type}`;
     }
 
+    function getLineItems(){
+      return [...lineItems.querySelectorAll('.line-item')].map((item, index) => {
+        const machineModel = item.querySelector('.line-machine-model').value.trim();
+        const quantity = item.querySelector('.line-quantity').value.trim();
+        const accessories = item.querySelector('.line-accessories').value.trim();
+        return { lineNumber: index + 1, machineModel, quantity, accessories };
+      });
+    }
+
+    function renumberLineItems(){
+      [...lineItems.querySelectorAll('.line-item')].forEach((item, index) => {
+        const title = item.querySelector('.line-item-title');
+        if (title) title.textContent = `Order Line Item ${index + 1}`;
+        const removeBtn = item.querySelector('.line-item-remove');
+        if (removeBtn) removeBtn.classList.toggle('hidden', index === 0 && lineItems.querySelectorAll('.line-item').length === 1);
+      });
+    }
+
+    function createLineItem(){
+      const wrapper = document.createElement('div');
+      wrapper.className = 'line-item';
+      wrapper.innerHTML = `
+        <div class="line-item-top">
+          <div class="line-item-title">Order Line Item</div>
+          <button class="line-item-remove" type="button">Remove</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-control">
+            <label>Machine Model *</label>
+            <select class="line-machine-model" required>
+              <option value="">Select machine model</option>
+              <option>KX Series Multi-Head</option>
+              <option>KE Series Multi-Head</option>
+              <option>KX-T1502D</option>
+              <option>KX-T1501</option>
+              <option>ES-T1501</option>
+              <option>MAS-15</option>
+              <option>MAS-12</option>
+              <option>MAS-7</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label>Quantity *</label>
+            <input class="line-quantity" type="number" min="1" step="1" required value="1">
+          </div>
+          <div class="form-control full">
+            <label>Accessories / Add-ons</label>
+            <input class="line-accessories" placeholder="Cap frames, stand, hoops, starter kit, etc.">
+          </div>
+        </div>
+      `;
+      return wrapper;
+    }
+
+    addLineItemBtn.addEventListener('click', () => {
+      lineItems.appendChild(createLineItem());
+      renumberLineItems();
+    });
+
+    lineItems.addEventListener('click', (e) => {
+      const btn = e.target.closest('.line-item-remove');
+      if (!btn) return;
+      const item = btn.closest('.line-item');
+      if (item && lineItems.querySelectorAll('.line-item').length > 1) {
+        item.remove();
+        renumberLineItems();
+      }
+    });
+
+    renumberLineItems();
+
     orderForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       submitOrderBtn.disabled = true;
@@ -518,8 +592,37 @@
       orderStatus.className = 'status hidden';
       orderStatus.textContent = '';
 
-      const formData = new FormData(orderForm);
-      const payload = Object.fromEntries(formData.entries());
+      const payload = {
+        dealerCompany: document.getElementById('dealerCompany').value.trim(),
+        dealerContact: document.getElementById('dealerContact').value.trim(),
+        dealerEmail: document.getElementById('dealerEmail').value.trim(),
+        dealerPhone: document.getElementById('dealerPhone').value.trim(),
+        customerContact: document.getElementById('customerContact').value.trim(),
+        customerCompany: document.getElementById('customerCompany').value.trim(),
+        shipToCompany: document.getElementById('shipToCompany').value.trim(),
+        installationRequested: document.getElementById('installationRequested').value.trim(),
+        shipAddress: document.getElementById('shipAddress').value.trim(),
+        shipCity: document.getElementById('shipCity').value.trim(),
+        shipState: document.getElementById('shipState').value.trim(),
+        shipZip: document.getElementById('shipZip').value.trim(),
+        dealerPoNumber: document.getElementById('dealerPoNumber').value.trim(),
+        additionalNotes: document.getElementById('additionalNotes').value.trim(),
+      };
+
+      const orderLineItems = getLineItems();
+
+      if (orderLineItems.some(item => !item.machineModel || !item.quantity)) {
+        showOrderStatus('Please complete the machine model and quantity for each order line item.', 'error');
+        submitOrderBtn.disabled = false;
+        submitOrderBtn.textContent = 'Submit Order';
+        return;
+      }
+
+      payload.orderLineItems = orderLineItems;
+      payload.orderLineItemsJson = JSON.stringify(orderLineItems);
+      payload.orderLineItemsSummary = orderLineItems.map(item =>
+        `Line ${item.lineNumber}: ${item.quantity} x ${item.machineModel}${item.accessories ? ` | Accessories: ${item.accessories}` : ''}`
+      ).join(' || ');
       payload.submittedAt = new Date().toISOString();
       payload.source = 'SWF USA Dealer Portal';
 
@@ -535,6 +638,9 @@
         }
 
         orderForm.reset();
+        lineItems.innerHTML = '';
+        lineItems.appendChild(createLineItem());
+        renumberLineItems();
         showOrderStatus('Order submitted successfully. Your internal workflow in Zapier should receive it momentarily.', 'success');
       } catch (err) {
         console.error(err);
